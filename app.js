@@ -1,22 +1,21 @@
 const express =require('express');
-const cors=require('cors');
-const dotenv =require("dotenv") ;
-import authRoutes from "./routes/authRoutes";
-import classRoutes from "./routes/classRoutes";
 const app= new express ();
-
+const cors=require('cors');
+const router =require("./src/routes/api");
+const dotenv =require("dotenv") ;
 dotenv.config();
 
 // Middleware and routes
 app.use(cors());
 app.use(express.json());
-const PORT = process.env.PORT || 3000;
+
 
 app.get("/", (req, res) => {
   res.send("Wellcome to My Gym-Management System");
 });
-app.use("/api/auth", authRoutes);
-app.use("/api/class", classRoutes);
+
+app.use("/api/v1",router)
+
 
 //Database 
 const mongoose= require('mongoose');
