@@ -44,17 +44,17 @@ The Gym Class Scheduling and Membership Management System is designed to manage 
 
 | Method | Endpoint             | Description                        | Parameters                          | Response                             |
 |--------|----------------------|------------------------------------|-------------------------------------|--------------------------------------|
-| GET    | `/api/class/trainers` | Get all trainers                   | None                                | List of trainers                     |
-| POST   | `/api/class/trainers` | Add a new trainer                  | `name`, `email`, `expertise`, `bio` | Success message or error             |
-| PUT    | `/api/class/trainers/:id` | Update a trainer's profile    | Trainer properties                  | Success message or error             |
-| DELETE | `/api/class/trainers/:id` | Delete a trainer's profile    | None                                | Success message or error             |
+| GET    | `/api/v1/trainerList` | Get all trainers                   | None                                | List of trainers                     |
+| POST   | `/api/v1/createTrainer` | Add a new trainer                  | `name`, `email`, `expertise`, `bio` | Success message or error             |
+| PUT    | `/api/v1/updateTrainers/:id` | Update a trainer's profile    | Trainer properties                  | Success message or error             |
+| DELETE | `/api/v1/deleteTrainer/:id` | Delete a trainer's profile    | None                                | Success message or error             |
 
 ### Member Booking (Members Only)
 
 | Method | Endpoint               | Description                       | Parameters           | Response                          |
 |--------|------------------------|-----------------------------------|----------------------|-----------------------------------|
-| POST   | `/api/class/book/:id`   | Book a class                      | `classId`, `userId`  | Booking confirmation              |
-| GET    | `/api/class/my-bookings`| View member's bookings            | `userId`             | List of member's bookings         |
+| POST   | `/api/v1/bookClass`   | Book a class                      | `classId`, `userId`  | Booking confirmation              |
+| GET    | `/api/v1/myClass`| View member's bookings            | `userId`             | List of member's bookings         |
 
 ---
 
