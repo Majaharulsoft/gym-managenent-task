@@ -6,6 +6,14 @@ exports.register = async function (req, res) {
   const { name, email, password, role } = req.body;
 
   try {
+    // Email validation (simple regex for standard email format)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ 
+        message: 'Invalid email format.' 
+      });
+    }
+
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -17,10 +25,9 @@ exports.register = async function (req, res) {
 
     res.status(201).json({ message: 'User registered successfully', user: savedUser });
   } catch (err) {
-    res.status(500).json({ message: 'registration  faill', error: err.message });
+    res.status(500).json({ message: 'Registration failed', error: err.message });
   }
 };
-
 
 exports.login = async function (req, res) {
   const { email, password } = req.body;
@@ -30,14 +37,14 @@ exports.login = async function (req, res) {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(400).json({ message: 'Invalid credentials' });
+      return res.status(400).json({ message: 'Invalid email' });
     }
 
     // Compare the provided password with the hashed password
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return res.status(400).json({ message: 'Invalid credentials' });
+      return res.status(400).json({ message: 'Invalid password' });
     }
 
     // Generate a JWT token
@@ -49,6 +56,6 @@ exports.login = async function (req, res) {
 
     res.status(200).json({ message: 'Login successful', token });
   } catch (err) {
-    res.status(500).json({ message: 'Error logging in', error: err.message });
+    res.status(500).json({ message: 'Login failled', error: err.message });
   }
 };

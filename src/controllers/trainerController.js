@@ -1,39 +1,104 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 
-exports.getAllTrainers = async function (req, res) {
-  try {
-    // Find all users with the role 'Trainer'
-    const trainers = await User.find({ role: 'Trainer' });
-
-    // Check if trainers exist
-    if (trainers.length === 0) {
-      return res.status(404).json({
+exports.createTrainerProfile = async function (req, res) {
+    const { name, email, password,bio } = req.body;
+  
+    try {
+      // Ensure only admins can create trainer profiles
+      if (req.user.role !== 'Admin') {
+        return res.status(403).json({
+          success: false,
+          message: "Access denied. Only admins can create trainer profiles.",
+        });
+      }
+  
+      // Check if the email already exists
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+        return res.status(400).json({
+          success: false,
+          message: "Email is already in use",
+        });
+      }
+  
+      // Hash the password
+      const hashedPassword = await bcrypt.hash(password, 10);
+  
+      // Create a new trainer instance (role is "Trainer")
+      const newTrainer = new User({
+        name,
+        email,
+        bio,
+        password: hashedPassword,
+        role: "Trainer",  // Ensure the role is set to Trainer
+      });
+  
+      // Save the new trainer profile
+      const savedTrainer = await newTrainer.save();
+  
+      res.status(201).json({
+        success: true,
+        message: "Trainer profile created successfully",
+        trainer: savedTrainer,
+      });
+    } catch (err) {
+      res.status(500).json({
         success: false,
-        message: "No trainers found",
+        message: "Error creating trainer profile",
+        errorDetails: err.message,
       });
     }
+  };
 
-    res.status(200).json({
-      success: true,
-      message: "Trainers retrieved successfully",
-      trainers: trainers,
-    });
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: "Error retrieving trainers",
-      errorDetails: err.message,
-    });
-  }
-};
+exports.getAllTrainers = async function (req, res) {
+    try {
+      // Ensure only admin can access
+      if (req.user.role !== 'Admin') {
+        return res.status(403).json({
+          success: false,
+          message: "Unauthorized access.You must be an admin to perform this action.",
+        });
+      }
+  
+      // Find all users with the role 'Trainer'
+      const trainers = await User.find({ role: 'Trainer' });
+  
+      // Check if trainers exist
+      if (trainers.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "No trainers found",
+        });
+      }
+  
+      res.status(200).json({
+        success: true,
+        message: "Trainers retrieved successfully",
+        trainers: trainers,
+      });
+    } catch (err) {
+      res.status(500).json({
+        success: false,
+        message: "Error retrieving trainers",
+        errorDetails: err.message,
+      });
+    }
+  };
 
-
-exports.updateTrainerProfile = async function (req, res) {
-    const { name, email, password } = req.body;
+  exports.updateTrainerProfile = async function (req, res) {
+    const { name, email,bio, password } = req.body;
     const trainerId = req.params.id; // Trainer ID is passed as a URL parameter
   
     try {
+      // Ensure only admin can access
+      if (req.user.role !== 'Admin') {
+        return res.status(403).json({
+          success: false,
+          message: "Unauthorized access.You must be an admin to perform this action.",
+        });
+      }
+  
       // Find the trainer by ID
       const trainer = await User.findById(trainerId);
   
@@ -51,6 +116,9 @@ exports.updateTrainerProfile = async function (req, res) {
       }
       if (email) {
         trainer.email = email;
+      }
+      if (bio) {
+        trainer.bio = bio;
       }
   
       // If the password is provided, hash the new password
@@ -80,6 +148,14 @@ exports.updateTrainerProfile = async function (req, res) {
     const trainerId = req.params.id; // Trainer ID is passed as a URL parameter
   
     try {
+      // Ensure only admin can access
+      if (req.user.role !== 'Admin') {
+        return res.status(403).json({
+          success: false,
+          message: "Unauthorized access.You must be an admin to perform this action.",
+        });
+      }
+  
       // Find the trainer by ID
       const trainer = await User.findById(trainerId);
   
