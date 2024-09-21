@@ -12,7 +12,8 @@ const TrainerSchema = mongoose.Schema({
      type: String,
      required: true
     },
-});
+}, {timestamps:true,versionKey:false}
+);
 
 const Trainer = mongoose.model('Trainer', TrainerSchema);
 

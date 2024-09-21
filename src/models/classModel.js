@@ -14,7 +14,8 @@ const ClassSchema = mongoose.Schema({
      type: Date,
       required: true },
   
-});
+}, {timestamps:true,versionKey:false}
+);
 
 const Class = mongoose.model('Class', ClassSchema);
 

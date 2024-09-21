@@ -5,7 +5,7 @@ const Class = require("../models/classModel");
 exports.createClass = async function (req, res) {
   const { trainerId, date, startTime } = req.body;
   const userRole = req.user.role; // Assume req.user is populated by your authentication middleware
-
+   
   try {
     // Ensure the user is an admin
     if (userRole !== 'Admin') {
@@ -27,10 +27,15 @@ exports.createClass = async function (req, res) {
     const classStartTime = new Date(`${date} ${startTime}:00`);
     const classEndTime = new Date(classStartTime);
     classEndTime.setHours(classEndTime.getHours() + 2); // Add 2 hours to the start time
+ 
+    // Automatically generate scheduleTime
+   const scheduleTime = `${date} ${startTime}:00`; // Construct the full scheduleTime
 
     // Find existing classes on the same date
-    const existingClasses = await Class.find({ date });
-
+    const existingClasses = await Class.find({
+      scheduleTime // Ensure we're querying by the exact date
+    });
+    
     // Ensure no more than 5 classes are scheduled per day
     if (existingClasses.length >= 5) {
       return res.status(400).json({
@@ -60,9 +65,7 @@ exports.createClass = async function (req, res) {
       });
     }
 
-    // Automatically generate scheduleTime
-    const scheduleTime = `${date} ${startTime}:00`; // Construct the full scheduleTime
-
+   
     // Create a new class object
     const newClass = new Class({
       trainer: trainerId,
@@ -87,6 +90,7 @@ exports.createClass = async function (req, res) {
     });
   }
 };
+
 
 exports.classlists = async function (req, res) {
   try {

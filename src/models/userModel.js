@@ -19,7 +19,8 @@ const UserSchema = new mongoose.Schema({
     enum: ['Admin', 'Trainer', 'Trainee'],
     required: true 
   }
-});
+},  {timestamps:true,versionKey:false}
+);
 
 const User = mongoose.model('User', UserSchema);
 
