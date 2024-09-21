@@ -62,7 +62,7 @@ The Gym Class Scheduling and Membership Management System is designed to manage 
 
 ### User Model
 
-javaScript
+```javaScript
 const userSchema = new mongoose.Schema({
   name: String,
   email: String,
@@ -73,7 +73,7 @@ const userSchema = new mongoose.Schema({
 
 ### Class Model
 
-javaScript
+```javaScript
 const classSchema = new mongoose.Schema({
   name: String,
   trainer: { type: mongoose.Schema.Types.ObjectId, ref: 'Trainer' },
@@ -84,7 +84,7 @@ const classSchema = new mongoose.Schema({
 
 ### Trainer Model
 
- javaScript
+```javaScript
 const trainerSchema = new mongoose.Schema({
   name: String,
   email: String,
@@ -154,6 +154,6 @@ Live Link [https://gym-management-system-wine.vercel.app](https://gym-management
 
 ### Key Features to Test
 
-- **Create Trainers**: Log in as an admin and create new trainers using the `/api/class/trainers` endpoint.
-- **Schedule Classes**: Log in as an admin and create new classes using the `/api/class` endpoint.
-- **Booking Classes**: Log in as a member, browse available classes, and book one using the `/api/class/book/:id` endpoint.
+- **Create Trainers**: Log in as an admin and create new trainers using the `/api/v1/createTrainer` endpoint.
+- **Schedule Classes**: Log in as an admin and create new classes using the `/api/v1/createClass` endpoint.
+- **Booking Classes**: Log in as a member, browse available classes, and book one using the `/api/v1/bookClass` endpoint.
