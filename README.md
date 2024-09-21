@@ -147,7 +147,7 @@ Access the API documentation at [https://documenter.getpostman.com/view/28385145
 
 ## Live Hosting Link
 
-Live Link [https://gym-management-system-wine.vercel.app](https://gym-management-system-wine.vercel.app)
+Live Link [gym-managenent-task.vercel.app](gym-managenent-task.vercel.app)
 
 ---
 
