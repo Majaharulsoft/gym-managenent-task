@@ -1,15 +1,24 @@
-var jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 
-var authMiddleware = function (req, res, next) {
-  var token = req.header("Authorization") ? req.header("Authorization").split(" ")[1] : null;
-  if (!token) return res.status(401).json({ message: "Unauthorized access" });
+const authMiddleware = function (req, res, next) {
+  // Extract the token from the Authorization header (Bearer token)
+  const authHeader = req.header("Authorization");
+  const token = authHeader ? authHeader.split(" ")[1] : null;
+
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized access: No token provided" });
+  }
 
   try {
-    var decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // Attach the decoded token to req.user
+    // Verify the token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    
+    // Attach the decoded token to req.user
+    req.user = decoded;
     next();
-  } catch (error) {
-    res.status(401).json({ message: "Invalid token" });
+  } catch (err) {
+    // Handle any token verification errors
+    return res.status(401).json({ message: "Invalid token", error: err.message });
   }
 };
 
