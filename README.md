@@ -147,7 +147,7 @@ Access the API documentation at [https://documenter.getpostman.com/view/28385145
 
 ## Live Hosting Link
 
-Live Link [gym-managenent-task.vercel.app](gym-managenent-task.vercel.app)
+Live Link [https://gym-managenent-task.vercel.app/](https://gym-managenent-task.vercel.app/)
 
 ---
 
