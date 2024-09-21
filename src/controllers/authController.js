@@ -2,44 +2,53 @@ const User = require('../models/userModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-exports.register = function (req, res) {
-  const name = req.body.name;
-  const email = req.body.email;
-  const password = req.body.password;
-  const role = req.body.role;
+exports.register = async function (req, res) {
+  const { name, email, password, role } = req.body;
 
-  bcrypt.hash(password, 10, function (err, hashedPassword) {
-    if (err) {
-      return res.status(500).json({ message: 'Error registering user', error: err });
-    }
-    const user = new User({ name: name, email: email, password: hashedPassword, role: role });
+  try {
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    user.save(function (err, savedUser) {
-      if (err) {
-        return res.status(500).json({ message: 'Error registering user', error: err });
-      }
-      res.status(201).json({ message: 'User registered successfully', user: savedUser });
-    });
-  });
+    // Create a new user instance
+    const user = new User({ name, email, password: hashedPassword, role });
+
+    // Save the user
+    const savedUser = await user.save();
+
+    res.status(201).json({ message: 'User registered successfully', user: savedUser });
+  } catch (err) {
+    res.status(500).json({ message: 'registration  faill', error: err.message });
+  }
 };
 
-exports.login = function (req, res) {
-  const email = req.body.email;
-  const password = req.body.password;
 
-  User.findOne({ email: email }, function (err, user) {
-    if (err || !user) {
+exports.login = async function (req, res) {
+  const { email, password } = req.body;
+
+  try {
+    // Find the user by email
+    const user = await User.findOne({ email });
+
+    if (!user) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    bcrypt.compare(password, user.password, function (err, isMatch) {
-      if (err || !isMatch) {
-        return res.status(400).json({ message: 'Invalid credentials' });
-      }
+    // Compare the provided password with the hashed password
+    const isMatch = await bcrypt.compare(password, user.password);
 
-      const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
 
-      res.status(200).json({ message: 'Login successful', token: token });
-    });
-  });
+    // Generate a JWT token
+    const token = jwt.sign(
+      { userId: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    res.status(200).json({ message: 'Login successful', token });
+  } catch (err) {
+    res.status(500).json({ message: 'Error logging in', error: err.message });
+  }
 };
