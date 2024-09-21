@@ -28,17 +28,17 @@ The Gym Class Scheduling and Membership Management System is designed to manage 
 
 | Method | Endpoint           | Description                       | Parameters                      | Response                          |
 |--------|--------------------|-----------------------------------|----------------------------------|-----------------------------------|
-| POST   | `/api/auth/register`| Register a new user               | `name`, `email`, `password`, `role` | Success or error message          |
-| POST   | `/api/auth/login`   | Log in a user (returns JWT)       | `email`, `password`              | JWT token or error message        |
+| POST   | `/api/v1/register`| Register a new user               | `name`, `email`, `password`, `role` | Success or error message          |
+| POST   | `/api/v1/login`   | Log in a user (returns JWT)       | `email`, `password`              | JWT token or error message        |
 
 ### Class Management (Admin Only)
 
 | Method | Endpoint              | Description                         | Parameters                  | Response                              |
 |--------|-----------------------|-------------------------------------|------------------------------|---------------------------------------|
-| GET    | `/api/class/`          | Get all available classes           | None                         | List of classes                      |
-| POST   | `/api/class/`          | Create a new class                  | `name`, `trainer`, `schedule` | Success message or error              |
-| PUT    | `/api/class/:id`       | Update a class                      | Class properties              | Success message or error              |
-| DELETE | `/api/class/:id`       | Delete a class                      | None                         | Success message or error              |
+| GET    | `/api/v1/classLists`          | Get all available classes           | None                         | List of classes                      |
+| POST   | `/api/v1/createClass`          | Create a new class                  | `name`, `trainer`, `schedule` | Success message or error              |
+| PUT    | `/api/v1/updateClass/:id`       | Update a class                      | Class properties              | Success message or error              |
+| DELETE | `/api/v1/deleteClass/:id`       | Delete a class                      | None                         | Success message or error              |
 
 ### Trainer Management (Admin Only)
 
@@ -141,7 +141,7 @@ const trainerSchema = new mongoose.Schema({
 
 ### Postman API Docs
 
-Access the API documentation at [http://localhost:3000/api-docs](http://localhost:3000/api-docs).
+Access the API documentation at [https://documenter.getpostman.com/view/28385145/2sAXqtagsB](https://documenter.getpostman.com/view/28385145/2sAXqtagsB).
 
 ---
 
